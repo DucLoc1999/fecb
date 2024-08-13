@@ -10,7 +10,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 		const widgetOptions: ChartingLibraryWidgetOptions = {
 			symbol: props.symbol,
 			datafeed: new (window as any).Datafeeds.UDFCompatibleDatafeed(
-				"https://demo_feed.tradingview.com",
+				"https://udf.tidvn.net",
 				undefined,
 				{
 					maxResponseLength: 1000,
@@ -22,13 +22,15 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 			library_path: props.library_path,
 			locale: props.locale as LanguageCode,
 			disabled_features: [
-				"use_localstorage_for_settings",
-				"header_symbol_search",
+				"timeframes_toolbar",
 				"header_compare",
-				"left_toolbar",
-				"timeframes_toolbar"
+				"header_symbol_search",
+				"popup_hints"
 			],
-			enabled_features: ["study_templates"],
+			enabled_features: [
+				"hide_left_toolbar_by_default",
+				"use_localstorage_for_settings"
+			],
 			charts_storage_url: props.charts_storage_url,
 			charts_storage_api_version: props.charts_storage_api_version,
 			client_id: props.client_id,
@@ -49,36 +51,39 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 				// "mainSeriesProperties.candleStyle.wickUpColor": "#4CAF50", // Màu bấc nến tăng
 				// "mainSeriesProperties.candleStyle.wickDownColor": "#E91E63" // Màu bấc nến giảm
 			},
-			// studies_overrides: {
-			// 	"volume.volume.color.0": "rgba(255, 74, 104, 1)", // Màu cột volume giảm
-			// 	"volume.volume.color.1": "rgba(81, 234, 138, 1)", // Màu cột volume tăng
-			// 	"volume.volume.transparency": 30, // Độ trong suốt của volume
-			// 	"volume.volume.price_levels": 50 // Độ dày của mức giá
-			// }
+			studies_access: {
+				type: "black",
+				tools: [
+					{
+						name: "RSI",
+						grayed: true,
+					},
+				],
+			},
 		};
 		
 		
 
 		const tvWidget = new widget(widgetOptions);
 
-		tvWidget.onChartReady(() => {
-			tvWidget.headerReady().then(() => {
-				const button = tvWidget.createButton();
-				button.setAttribute("title", "Click to show a notification popup");
-				button.classList.add("apply-common-tooltip");
-				button.addEventListener("click", () =>
-					tvWidget.showNoticeDialog({
-						title: "Notification",
-						body: "TradingView Charting Library API works correctly",
-						callback: () => {
-							console.log("Noticed!");
-						},
-					})
-				);
+		// tvWidget.onChartReady(() => {
+		// 	tvWidget.headerReady().then(() => {
+		// 		const button = tvWidget.createButton();
+		// 		button.setAttribute("title", "Click to show a notification popup");
+		// 		button.classList.add("apply-common-tooltip");
+		// 		button.addEventListener("click", () =>
+		// 			tvWidget.showNoticeDialog({
+		// 				title: "Notification",
+		// 				body: "TradingView Charting Library API works correctly",
+		// 				callback: () => {
+		// 					console.log("Noticed!");
+		// 				},
+		// 			})
+		// 		);
 
-				button.innerHTML = "Check API";
-			});
-		});
+		// 		button.innerHTML = "Check API";
+		// 	});
+		// });
 
 		return () => {
 			tvWidget.remove();

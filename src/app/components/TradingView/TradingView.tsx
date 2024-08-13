@@ -8,18 +8,20 @@ import {
   ResolutionString,
 } from "@/public/static/charting_library/charting_library";
 
+import { isNil } from "lodash";
+
 const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
-    symbol: "AAPL",
-    interval: "1D" as ResolutionString,
-    library_path: "/static/charting_library/",
-    locale: "en",
-    charts_storage_url: "https://saveload.tradingview.com",
-    charts_storage_api_version: "1.1",
-    client_id: "tradingview.com",
-    user_id: "public_user_id",
-    fullscreen: false,
-    autosize: true,
-  };
+  symbol: "BTCUSDT",
+  interval: "1H" as ResolutionString,
+  library_path: "/static/charting_library/",
+  locale: "en",
+  charts_storage_url: "https://saveload.tradingview.com",
+  charts_storage_api_version: "1.1",
+  client_id: "tradingview.com",
+  user_id: "public_user_id",
+  fullscreen: false,
+  autosize: true,
+};
 
 const TVChartContainer = dynamic(
   () =>
@@ -27,7 +29,10 @@ const TVChartContainer = dynamic(
   { ssr: false }
 );
 
-export default function TradingViewComp() {
+export default function TradingViewComp({ widgetProps }: { widgetProps: Partial<ChartingLibraryWidgetOptions> }) {
+  if (isNil(widgetProps)) {
+    widgetProps = defaultWidgetProps;
+  }
   const [isScriptReady, setIsScriptReady] = useState(false);
   return (
     <>
@@ -38,7 +43,7 @@ export default function TradingViewComp() {
           setIsScriptReady(true);
         }}
       />
-      {isScriptReady && <TVChartContainer {...defaultWidgetProps} />}
+      {isScriptReady && <TVChartContainer {...widgetProps} />}
     </>
   );
 }
