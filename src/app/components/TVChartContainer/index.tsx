@@ -92,7 +92,7 @@ export const TVChartContainer = (props: Partial<ChartingLibraryWidgetOptions>) =
 
 	return (
 		<>
-			<div ref={chartContainerRef} className={styles.TVChartContainer} />
+			<div ref={chartContainerRef} className="w-full h-full" />
 		</>
 	);
 };

@@ -1,5 +1,4 @@
 "use client";
-// import { HeatMapChart } from "@/app/components/rsi-heatmap/heatmap";
 import { ManagePortfolio } from "@/app/components/rsi-heatmap/manage-portfolio";
 import { OderInfomation } from "@/app/components/rsi-heatmap/order-info";
 import { TopOverBought } from "@/app/components/rsi-heatmap/top-over-bought";
@@ -8,7 +7,6 @@ import { TradeWithCandleStick } from "@/app/components/rsi-heatmap/trade-with-ca
 import { TradingStrategy } from "@/app/components/rsi-heatmap/trading-strategy";
 import TradingViewComp from "@/app/components/TradingView/TradingView";
 import { ChartingLibraryWidgetOptions, ResolutionString } from "@/public/static/charting_library/charting_library";
-import { ArrowsOutSimple } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
@@ -29,18 +27,11 @@ export default function ChartPage() {
 
   return (
     <div className="max-w-8xl">
-      <div className="grid grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5 mt-6">
-        <div className="col-span-3 lg:col-span-1 order-2 lg:order-1 border border-[#E7E7E7] rounded-xl">
+      <div className="grid  grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5 mt-6">
+        {/* <div className="col-span-3 lg:col-span-1 order-2 lg:order-1 border border-[#E7E7E7] rounded-xl">
           <TopOverSold />
-        </div>
-        <div className="col-span-3 lg:col-span-2 order-1 lg:order-2 border border-[#E7E7E7] rounded-xl relative">
-          {/* <ArrowsOutSimple
-            weight="bold"
-            width={24}
-            height={24}
-            className="absolute right-6 top-8 z-20 cursor-pointer"
-            onClick={handle.enter}
-          />  */}
+        </div> */}
+        <div className="col-span-3 lg:col-span-3 order-1 lg:order-2 border border-[#E7E7E7] rounded-xl relative">
            <FullScreen
             handle={handle}
             className="flex items-center justify-around h-full"
