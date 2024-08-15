@@ -31,7 +31,7 @@ type TopOverBoughtProps = {
   className?: string;
 };
 
-export const TopOverBought = ({ className }: TopOverBoughtProps) => {
+export const WatchList = ({ className }: TopOverBoughtProps) => {
   const [loading, setLoading] = useState(false);
   const [topOverBoughtData, setTopOverBoughtData] = useState<
     TopOverBoughtDataItem[]

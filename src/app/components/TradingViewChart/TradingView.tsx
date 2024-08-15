@@ -25,11 +25,11 @@ const defaultWidgetProps: Partial<ChartingLibraryWidgetOptions> = {
 
 const TVChartContainer = dynamic(
   () =>
-    import("@/app/components/TVChartContainer").then((mod) => mod.TVChartContainer),
+    import("@/app/components/TradingViewChart/TVChartContainer").then((mod) => mod.TVChartContainer),
   { ssr: false }
 );
 
-export default function TradingViewComp({ widgetProps }: { widgetProps: Partial<ChartingLibraryWidgetOptions> }) {
+export default function TradingViewChart({ widgetProps }: { widgetProps: Partial<ChartingLibraryWidgetOptions> }) {
   if (isNil(widgetProps)) {
     widgetProps = defaultWidgetProps;
   }
