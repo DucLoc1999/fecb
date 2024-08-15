@@ -96,7 +96,7 @@ export const TradingViewFilter = ({
 
         <div className="hidden xl:flex xl:flex-col items-center px-32">
           <div className="text-sm font-medium leading-5 text-[#7D7D7D]">
-            Tradding Pair:
+            Symbol : 
           </div>
           <div className="text-xl font-semibold leading-8 mt-2">
             {symbol}

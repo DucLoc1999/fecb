@@ -2,135 +2,136 @@
 
 import { Table } from "antd";
 import classNames from "classnames";
-import "@/app/css/rsi-heatmap/top-over-sold.css";
+import "@/app/css/rsi-heatmap/top-over-bought.css";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { RsiType, TimeType } from "@/app/type/type";
-import { SingleIndicatorContext } from "@/app/contexts/single-indicator";
 import api from "@/app/axios";
+import { TradingChartContextContext } from "@/app/contexts/trading-chart-context";
 const { Column } = Table;
 
-export type TopOverBoughtData = {
+
+interface watchListDataItem {
   symbol: string;
-  rsi: number;
-  close: number;
-  high: number;
-  low: number;
-  dateCreated: string;
-};
+  priceChange: string;
+  priceChangePercent: string;
+  weightedAvgPrice: string;
+  prevClosePrice: string;
+  lastPrice: string;
+  lastQty: string;
+  bidPrice: string;
+  bidQty: string;
+  askPrice: string;
+  askQty: string;
+  openPrice: string;
+  highPrice: string;
+  lowPrice: string;
+  volume: string;
+  quoteVolume: string;
+  openTime: number;
+  closeTime: number;
+  firstId: number;
+  lastId: number;
+  count: number;
+}
 
-export type TopOverBoughtDataItem = {
-  key: number;
-  name: string;
-  rsi: number;
-  close: number;
-  high: number;
-  low: number;
-  discoveredOn: string;
-};
-type TopOverBoughtProps = {
-  className?: string;
-};
-
-export const WatchList = ({ className }: TopOverBoughtProps) => {
+export const WatchList = ({ className }: any) => {
+  const { widgetProps, setWidgetProps } = useContext(TradingChartContextContext);
   const [loading, setLoading] = useState(false);
-  const [topOverBoughtData, setTopOverBoughtData] = useState<
-    TopOverBoughtDataItem[]
-  >([]);
-  const singleIndicatorFilter = useContext(SingleIndicatorContext);
+  const [watchListData, setwatchListData] = useState();
 
   const fetchData = useCallback(
-    async (heatMapType: RsiType, time: TimeType) => {
+    async () => {
       try {
         setLoading(true);
-        const { data: topOverBought } = await api.get(
-          "/heatmap/top-over-bought",
-          {
-            params: { heatMapType, timeType: time },
-          }
+        const { data: watchList } = await api.get(
+          `https://www.binance.com/api/v3/ticker/24hr?symbols=`
+          + `%5B%22BTCUSDT%22,`
+          + `%22ETHUSDT%22,`
+          + `%22BNBUSDT%22,`
+          + `%22SOLUSDT%22,`
+          + `%22XRPUSDT%22,`
+          + `%22TONUSDT%22,`
+          + `%22DOGEUSDT%22,`
+          + `%22ADAUSDT%22,`
+          + `%22TRXUSDT%22,`
+          + `%22AVAXUSDT%22,`
+          + `%22SHIBUSDT%22,`
+          + `%22BCHUSDT%22,`
+          + `%22LINKUSDT%22,`
+          + `%22DOTUSDT%22%5D`
         );
-        setTopOverBoughtData(topOverBought);
-
-        const newData = topOverBought?.map((item: any, index: number) => {
-          return {
-            key: index,
-            name: item.symbol,
-            rsi: item.rsi,
-            close: item.close,
-            high: item.high,
-            low: item.low,
-            discoveredOn: item.dateCreated,
-          };
-        });
-        setTopOverBoughtData(newData);
+        setwatchListData(watchList);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     },
-    [
-      singleIndicatorFilter.setSignal,
-      singleIndicatorFilter.setRecordActiveIndex,
-    ]
+    []
   );
+
   useEffect(() => {
-    fetchData(singleIndicatorFilter.type, singleIndicatorFilter.time);
-  }, [fetchData, singleIndicatorFilter.type, singleIndicatorFilter.time]);
+    fetchData();
+  }, [fetchData]);
 
-  const topOverSoldClassName = classNames("h-[604px]", className);
-
-  const onRowClick = (record: TopOverBoughtDataItem) => {
+  const onRowClick = (record: watchListDataItem) => {
     if (record) {
-      singleIndicatorFilter.setSignal("bought");
-      singleIndicatorFilter.setRecordActiveIndex(record.key);
-      singleIndicatorFilter.setRecordActive(record);
+      const { symbol } = record;
+      setWidgetProps({
+        ...widgetProps,
+        symbol: symbol,
+      });
     }
   };
 
-  const rowClassName = (record: TopOverBoughtDataItem) => {
-    const selectedRowKey = singleIndicatorFilter.recordActiveIndex ?? "";
-    return record.key === selectedRowKey &&
-      singleIndicatorFilter.signal === "bought"
+  const rowClassName = (record: watchListDataItem) => {
+    const curentSymbol = widgetProps.symbol ?? "";
+    return record.symbol == curentSymbol
       ? "row-active"
       : "";
   };
 
+  const watchListClassName = classNames("h-[604px]", className);
+
   return (
-    <div className={topOverSoldClassName}>
-      <div className="px-6 pt-6">
-        <div className="text-[#CC0001] text-lg leading-7 font-bold text-center">
-          Top Over Bought
-        </div>
+    <div className={watchListClassName}>
+      <div className="p-6">
         <Table
-          dataSource={topOverBoughtData}
+          dataSource={watchListData}
           size="middle"
           pagination={false}
           scroll={{ y: 460 }}
+          className="header-color ant-table-custom"
           loading={loading}
-          className="mt-4 header-color ant-table-custom"
           onRow={(record) => ({
             onClick: () => onRowClick(record),
           })}
           rowClassName={rowClassName}
         >
           <Column
-            title="Name"
-            dataIndex="name"
-            key="name"
+            title="Symbol"
+            dataIndex="symbol"
+            key="symbol"
             align="left"
-            render={(name: string) => (
+            render={(data: string) => (
               <>
-                <div key={name} className="leading-5 text-sm text-[#CC0001]">
-                  {name}
+                <div key={data} className="leading-5 text-sm">
+                  {data}
                 </div>
               </>
             )}
           />
           <Column
-            title="Discovered on"
-            dataIndex="discoveredOn"
-            key="discoveredOn"
-            align="right"
+            title="24 Change"
+            dataIndex="priceChangePercent"
+            key="priceChangePercent"
+            align="left"
+            render={(data: number) => (
+              <>
+                <div key={data} className={`leading-5 text-sm ${data > 0 ? `text-green-500` : `text-red-500`}`}>
+                  {data} %
+                </div>
+              </>
+            )}
           />
         </Table>
       </div>
